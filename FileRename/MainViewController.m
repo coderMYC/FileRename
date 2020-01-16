@@ -169,9 +169,9 @@ typedef NS_ENUM(NSInteger , OutputType)
             {
                 NSDate *fileCreateDate = [fileAttributes objectForKey:NSFileCreationDate];
                 
-                NSString *newName = [self getNewFileNameWithOriginName:namePath fileDate:fileCreateDate];
+//                NSString *newName = [self getNewFileNameWithOriginName:namePath fileDate:fileCreateDate];
 
-                NSString *newFilePath = [outputPaht stringByAppendingFormat:@"/%@", newName];
+//                NSString *newFilePath = [outputPaht stringByAppendingFormat:@"/%@", newName];
                               
                 //复制文件
 //                [self copyFileWithOriginFilePath:originFilePath newFilePath:newFilePath];
