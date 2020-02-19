@@ -169,15 +169,15 @@ typedef NS_ENUM(NSInteger , OutputType)
             {
                 NSDate *fileCreateDate = [fileAttributes objectForKey:NSFileCreationDate];
                 
-//                NSString *newName = [self getNewFileNameWithOriginName:namePath fileDate:fileCreateDate];
+                NSString *newName = [self getNewFileNameWithOriginName:namePath fileDate:fileCreateDate];
 
-//                NSString *newFilePath = [outputPaht stringByAppendingFormat:@"/%@", newName];
+                NSString *newFilePath = [outputPaht stringByAppendingFormat:@"/%@", newName];
                               
-                //复制文件
-//                [self copyFileWithOriginFilePath:originFilePath newFilePath:newFilePath];
+//                复制文件
+                [self copyFileWithOriginFilePath:originFilePath newFilePath:newFilePath];
           
-                //删除文件
-//                [self deleteFileWithPath:originFilePath];
+//                删除文件
+                [self deleteFileWithPath:originFilePath];
             }
             else
             {
@@ -243,6 +243,16 @@ typedef NS_ENUM(NSInteger , OutputType)
         NSString *progressStr = [NSString stringWithFormat:@"当前进度：%ld/%ld,删除原文件：%ld",self.copyFinishFileCount,self.totalFileCount,self.deleteFileCount];
         NSLog(@"%@", progressStr);
         self.progressLabel.stringValue = progressStr;
+        
+        if(self.copyFinishFileCount == self.totalFileCount)
+        {
+            dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5/*延迟执行时间*/ * NSEC_PER_SEC));
+            
+            dispatch_after(delayTime, dispatch_get_main_queue(), ^{
+                
+                [self showRemindMessage:@"转换完成"];
+            });
+        }
     });
 }
 
@@ -320,12 +330,14 @@ typedef NS_ENUM(NSInteger , OutputType)
 
 -(void)showRemindMessage:(NSString *)message
 {
-    NSAlert *alert = [[NSAlert alloc] init];
-    alert.alertStyle = NSAlertStyleWarning;
-    [alert addButtonWithTitle:@"确定"];
-    alert.messageText = @"温馨提示";
-    alert.informativeText = message;
-    [alert beginSheetModalForWindow:[NSApplication sharedApplication].keyWindow completionHandler:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSAlert *alert = [[NSAlert alloc] init];
+        alert.alertStyle = NSAlertStyleWarning;
+        [alert addButtonWithTitle:@"确定"];
+        alert.messageText = @"温馨提示";
+        alert.informativeText = message;
+        [alert beginSheetModalForWindow:[NSApplication sharedApplication].keyWindow completionHandler:nil];
+    });
 }
 
 @end
